@@ -9,14 +9,14 @@ from typing import Any, Optional
 
 import httpx
 
+from mcp_amadeus.config import get_settings
+
 
 class AmadeusClient:
     """Sync/async Amadeus API client with automatic OAuth2 token refresh.
 
-    Reads configuration from environment variables:
-    - AMADEUS_CLIENT_ID
-    - AMADEUS_CLIENT_SECRET
-    - AMADEUS_BASE_URL (default: https://test.api.amadeus.com)
+    Reads configuration from environment variables (AMADEUS_* prefix),
+    .env file, or explicit constructor parameters.
     """
 
     def __init__(
@@ -25,12 +25,10 @@ class AmadeusClient:
         client_secret: str | None = None,
         base_url: str | None = None,
     ) -> None:
-        self.client_id = client_id or os.environ.get("AMADEUS_CLIENT_ID", "")
-        self.client_secret = client_secret or os.environ.get("AMADEUS_CLIENT_SECRET", "")
-        self.base_url = (
-            base_url
-            or os.environ.get("AMADEUS_BASE_URL", "https://test.api.amadeus.com")
-        )
+        settings = get_settings()
+        self.client_id = client_id or settings.client_id
+        self.client_secret = client_secret or settings.client_secret
+        self.base_url = base_url or settings.base_url
         self._access_token: str | None = None
         self._token_expiry: datetime | None = None
 
