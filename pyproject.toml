@@ -1,0 +1,31 @@
+[project]
+name = "mcp-amadeus"
+version = "0.1.0"
+description = "Amadeus Travel API operations as Python library, LangChain tools, and MCP server"
+requires-python = ">=3.10"
+dependencies = ["httpx>=0.27.0"]
+
+[project.optional-dependencies]
+mcp = ["mcp[cli]>=1.0.0"]
+langchain = ["langchain-core>=0.2.0", "pydantic>=2.0.0"]
+all = ["mcp[cli]>=1.0.0", "langchain-core>=0.2.0", "pydantic>=2.0.0"]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov",
+    "pytest-asyncio>=0.23.0",
+    "respx>=0.22.0",
+]
+
+[project.scripts]
+mcp-amadeus = "mcp_amadeus.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_amadeus"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
